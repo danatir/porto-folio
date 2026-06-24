@@ -24936,10 +24936,9 @@
   })();
   var loaderTimer = setInterval(() => {
     const timeFrac = Math.min(1, (performance.now() - tStart) / MIN_LOADER_MS);
-    const target = Math.min(loadFrac, timeFrac);
-    disp += (target - disp) * 0.1;
-    if (target >= 0.999 && target - disp < 4e-3) disp = 1;
-    if (!collapsed && disp >= 0.999 && loadFrac >= 1 && timeFrac >= 1) {
+    disp += (timeFrac - disp) * 0.1;
+    if (timeFrac >= 0.999 && timeFrac - disp < 4e-3) disp = 1;
+    if (!collapsed && disp >= 0.999 && timeFrac >= 1) {
       collapsed = true;
       clearInterval(loaderTimer);
       loaderLive = false;
