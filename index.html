@@ -242,11 +242,20 @@
   <!-- tr-title lives outside .transition so scroll clip-path never clips it -->
   <span class="tr-title" id="trTitle" aria-hidden="true"></span>
 
-  <!-- Fallback: if any module errors, collapse loader after 15s regardless -->
+  <!-- Debug: show JS errors visibly on screen -->
   <script>
+    window.__dbg = function(msg) {
+      var d = document.getElementById('__err');
+      if (!d) { d = document.createElement('div'); d.id='__err'; d.style='position:fixed;bottom:0;left:0;right:0;background:red;color:#fff;font:12px monospace;padding:8px;z-index:99999;max-height:40vh;overflow:auto;white-space:pre-wrap'; document.body.appendChild(d); }
+      d.textContent += '\n' + msg;
+    };
+    window.addEventListener('error', function(e) { window.__dbg('ERROR: ' + e.message + ' @ ' + e.filename + ':' + e.lineno); });
+    window.addEventListener('unhandledrejection', function(e) { window.__dbg('PROMISE: ' + e.reason); });
+    // Fallback: collapse loader after 15s regardless
     setTimeout(function() {
       var l = document.getElementById("loader");
       if (l && !l.classList.contains("snap")) {
+        window.__dbg('FALLBACK: force-collapsing loader after 15s');
         l.classList.add("snap");
         document.body.classList.add("entered");
       }
