@@ -261,7 +261,11 @@
       }
     }, 15000);
   </script>
-  <script type="module" src="js/main.js"></script>
-  <script type="module" src="js/ui.js"></script>
+  <script type="module">
+    import('./js/main.js').catch(e => window.__dbg('main.js IMPORT FAILED: ' + e));
+  </script>
+  <script type="module">
+    import('./js/ui.js').catch(e => window.__dbg('ui.js IMPORT FAILED: ' + e));
+  </script>
 </body>
 </html>

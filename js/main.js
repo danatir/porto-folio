@@ -15,9 +15,13 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { Audio } from "./audio.js";
 import { LiveDemo } from "./demo.js";
 
+window.__dbg && window.__dbg('main.js loaded — imports ok');
+
 /* ---------------- globals ---------------- */
 const canvas = document.getElementById("scene");
+window.__dbg && window.__dbg('canvas el: ' + (canvas ? 'found' : 'NULL'));
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
+window.__dbg && window.__dbg('WebGL renderer created ok');
 renderer.setClearColor(0x050507, 1);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
