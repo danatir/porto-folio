@@ -345,3 +345,7 @@ sizeGrain();
 tick();
 
 setTimeout(() => { if (!collapsed) { collapsed = true; clearInterval(loaderTimer); loaderLive = false; collapseLoader(); } }, 12000);
+
+window.addEventListener("error", () => {
+  if (!collapsed) { collapsed = true; clearInterval(loaderTimer); loaderLive = false; collapseLoader(); }
+});

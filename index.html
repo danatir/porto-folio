@@ -242,6 +242,16 @@
   <!-- tr-title lives outside .transition so scroll clip-path never clips it -->
   <span class="tr-title" id="trTitle" aria-hidden="true"></span>
 
+  <!-- Fallback: if any module errors, collapse loader after 15s regardless -->
+  <script>
+    setTimeout(function() {
+      var l = document.getElementById("loader");
+      if (l && !l.classList.contains("snap")) {
+        l.classList.add("snap");
+        document.body.classList.add("entered");
+      }
+    }, 15000);
+  </script>
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/ui.js"></script>
 </body>
