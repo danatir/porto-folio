@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DAN ATIR — Portfolio / 2025</title>
+  <meta name="description" content="Dan Atir — Visual Communication. Branding, 3D, illustration. Portfolio 2025." />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preload" as="fetch" href="assets/models/dann_logo.glb" crossorigin />
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+      "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.mjs"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- SVG displacement for logo reshape during loading -->
+  <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <defs>
+      <filter id="liq-solid" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.038 0.03" numOctaves="4" seed="7" result="turb"/>
+        <feDisplacementMap in="SourceGraphic" in2="turb" scale="0" xChannelSelector="R" yChannelSelector="G" id="liqScale"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- ===== LOADING — inverted slab that snaps collapsed ===== -->
+  <div id="loader" class="slab">
+    <div class="slab-logo" id="slabLogo">
+      <span class="slab-corner slab-tl">DAN ATIR</span>
+      <img src="assets/img/dann_logo.png" alt="DANN" />
+      <span class="slab-corner slab-br">PORTFOLIO</span>
+    </div>
+  </div>
+
+  <!-- ===== WEBGL (the floating 3D logo) — fixed background ===== -->
+  <canvas id="scene"></canvas>
+
+  <!-- ===== GRAIN / STATIC OVERLAY ===== -->
+  <canvas id="grain" class="grain"></canvas>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- ===== FIXED NAV ===== -->
+  <!-- vertical numbered nav, top-left -->
+  <header class="nav" id="nav">
+    <nav class="nav-links">
+      <a href="#about" data-link><sup>01</sup>INFO</a>
+      <a href="#works" data-link><sup>02</sup>WORK</a>
+      <a href="#posters" data-link><sup>03</sup>ARCHIVE</a>
+      <a href="#contact" data-link><sup>04</sup>CONTACT</a>
+    </nav>
+  </header>
+
+  <!-- camera HUD top-right -->
+  <div class="meta" id="meta">
+    <div class="meta-card">
+      <div class="meta-left">
+        <span class="meta-name">DAN ATIR</span>
+        <span class="meta-role">VISUAL DESIGNER</span>
+      </div>
+      <div class="meta-right">
+        <span class="meta-location">TOKYO, JAPAN</span>
+        <span class="meta-mute-hint" id="muteHint">[M] MUTE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HORIZONTAL SLIDE DECK ===== -->
+  <main id="content">
+    <div class="pages" id="pages">
+
+      <!-- PAGE 0 · LANDING — 3D logo behind; jordangilroy-style frame -->
+      <section id="hero" class="page page-hero" data-title="DANN">
+        <div class="hero-statement reveal">
+          <h1>Building visual identities<br>&amp; meaningful, memorable<br>design experiences.</h1>
+          <div class="hero-cue">[SCROLL TO EXPLORE]</div>
+        </div>
+        <!-- thumbnails live here so revealPage treats them identically to the statement -->
+        <div class="hero-thumbs reveal" id="heroThumbs"></div>
+      </section>
+
+      <!-- PAGE 1 · INFO -->
+      <section id="about" class="page info-page" data-title="INFO"></section>
+
+      <!-- PROJECT PAGES (one slide per project) are injected here by ui.js -->
+
+      <!-- ARCHIVE -->
+      <section id="posters" class="page archive-page" data-title="ARCHIVE"></section>
+
+      <!-- CONTACT -->
+      <section id="contact" class="page page-contact" data-title="CONTACT">
+        <div class="contact-inner">
+          <p class="contact-label">CONTACT</p>
+          <h2 class="contact-heading">Get in touch.</h2>
+          <hr class="contact-divider" />
+          <ul class="contact-list">
+            <li>
+              <a href="mailto:danatir64@gmail.com" class="contact-link" target="_blank" rel="noopener">
+                danatir64@gmail.com <span class="contact-arrow">↗</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.linkedin.com/in/dan-atir/" class="contact-link" target="_blank" rel="noopener">
+                LinkedIn <span class="contact-arrow">↗</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ===== POSTER LIGHTBOX ===== -->
+  <div class="lightbox" id="lightbox" aria-hidden="true"><img alt="" /></div>
+
+  <!-- ===== MARQUEE (reveals at contact) ===== -->
+  <div class="marquee" id="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>LET'S BUILD SOMETHING THAT MOVES HEARTS&nbsp;&nbsp;—&nbsp;&nbsp;DANATIR64@GMAIL.COM&nbsp;&nbsp;—&nbsp;&nbsp;AVAILABLE FOR WORK&nbsp;&nbsp;—&nbsp;&nbsp;</span>
+      <span>LET'S BUILD SOMETHING THAT MOVES HEARTS&nbsp;&nbsp;—&nbsp;&nbsp;DANATIR64@GMAIL.COM&nbsp;&nbsp;—&nbsp;&nbsp;AVAILABLE FOR WORK&nbsp;&nbsp;—&nbsp;&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- ===== ARCHIVE OVERLAY (fixed fullscreen — shown/hidden by JS) ===== -->
+  <div id="archiveOverlay" aria-hidden="true"></div>
+
+  <!-- ===== LIVE DEMO (Maki-style roaming) ===== -->
+  <div id="demo" class="demo hidden">
+    <div class="demo-backdrop"></div>
+    <div class="demo-stage">
+      <div class="demo-head">
+        <div class="demo-title">VIARO — LIVE PROTOTYPE</div>
+        <div class="demo-controls">
+          <button id="roamBtn" class="roam">◉ ROAMING</button>
+          <button id="demoClose" class="dclose">✕ CLOSE</button>
+        </div>
+      </div>
+      <div class="device">
+        <div class="device-notch"></div>
+        <div class="device-screen" id="appScreen"></div>
+        <div class="device-nav" id="appNav"></div>
+      </div>
+      <div class="demo-foot">Interactive demo · click the tabs or let it roam autonomously</div>
+    </div>
+  </div>
+
+  <!-- ===== CUSTOM CURSOR (sub-pages) ===== -->
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <div class="cur-ring"></div>
+  </div>
+
+  <!-- ===== LIQUID / OIL TRAIL (landing) — canvas ink sim, inverts ===== -->
+  <canvas class="liquid" id="liquid" aria-hidden="true"></canvas>
+
+  <!-- ===== INFO SCROLL SCENE (fixed, scroll-driven) ===== -->
+  <!-- white panel — sits below tr-title (z:79) so the slab title shows over it -->
+  <div id="info-bg" aria-hidden="true"></div>
+  <!-- photos — sit above tr-title so they layer over the watermark text -->
+  <div id="info-photos" aria-hidden="true">
+    <div id="info-photo-l"><img src="assets/img/oto_1.jpg" alt="" /></div>
+    <div id="info-photo-c-wrap">
+      <div id="info-photo-c">
+        <div id="info-flipper">
+          <div class="ifl-front"><img src="assets/img/viaro_1.jpg" alt="" /></div>
+          <div class="ifl-back"><img src="assets/img/edenic_1.jpg" alt="" /></div>
+        </div>
+      </div>
+    </div>
+    <div id="info-photo-r"><img src="assets/img/lute_1.jpg" alt="" /></div>
+    <!-- text panels — enter as side photos exit -->
+    <div id="info-text-l">
+      <div class="it-hey">HEY!</div>
+      <p class="it-bio">I'm Dan, a Visual Designer<br>based in Tokyo, Japan.<br>Focused on branding,<br>3D &amp; meaningful experiences.</p>
+    </div>
+    <div id="info-text-r">
+      <p>Visual Communication Major with extensive experience in Adobe programs, 3D design, and professional illustration. Skilled in branding and crafting distinctive visual identities.</p>
+      <a class="it-cta" href="#works">SEE WORK ↗</a>
+    </div>
+  </div>
+
+  <!-- ===== INFO SERVICES PANEL (fixed, scroll-driven, dark) ===== -->
+  <div id="info-services" aria-hidden="true">
+    <div class="is-watermark" aria-hidden="true">WORK</div>
+    <div class="is-list">
+      <div class="is-item">
+        <span class="is-num">[01]</span>
+        <span class="is-title">Branding &amp; identity</span>
+        <p class="is-desc">Crafting distinctive visual identities — from logo to full brand system — that align with who you are and engage your audience.</p>
+      </div>
+      <div class="is-item">
+        <span class="is-num">[02]</span>
+        <span class="is-title">3D design &amp; print</span>
+        <p class="is-desc">Modelling, rendering and 3D printing functional and decorative pieces. Bridging the digital and physical with precision and craft.</p>
+      </div>
+      <div class="is-item">
+        <span class="is-num">[03]</span>
+        <span class="is-title">Motion &amp; interaction</span>
+        <p class="is-desc">Animations and interactions that create dynamic, engaging digital experiences — from subtle micro-movements to complex multi-step sequences.</p>
+      </div>
+      <div class="is-item">
+        <span class="is-num">[04]</span>
+        <span class="is-title">Art direction</span>
+        <p class="is-desc">Combining AI generation tools with traditional conceptual ideation to produce unique visuals that resonate deeply with your audience.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== INFO PROJECT PREVIEW (fixed, scroll-driven) ===== -->
+  <div id="info-proj-preview" class="ipp-card" aria-hidden="true">
+    <div id="ipp-img-wrap"><img id="ipp-img" src="" alt="" /></div>
+    <div id="ipp-info">
+      <span class="ipp-num"></span>
+      <h2 class="ipp-title"></h2>
+      <p class="ipp-tag"></p>
+      <ul class="ipp-scope"></ul>
+      <a class="ipp-cta" href="#">VIEW PROJECT [↗]</a>
+    </div>
+  </div>
+
+  <!-- ===== SCROLL LINE — clip-path boundary ===== -->
+  <div id="scrollLine" aria-hidden="true"></div>
+
+  <!-- ===== PAGE-OPEN TRANSITION — slab wipe (nav clicks only) ===== -->
+  <div class="transition" id="transition" aria-hidden="true">
+    <div class="tr-panel tr-top">
+      <div class="tr-col"></div><div class="tr-col"></div><div class="tr-col"></div><div class="tr-col"></div><div class="tr-col"></div>
+    </div>
+    <div class="tr-panel tr-bot">
+      <div class="tr-col"></div><div class="tr-col"></div><div class="tr-col"></div><div class="tr-col"></div><div class="tr-col"></div>
+    </div>
+    <div class="tr-slab"></div>
+  </div>
+  <!-- tr-title lives outside .transition so scroll clip-path never clips it -->
+  <span class="tr-title" id="trTitle" aria-hidden="true"></span>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/ui.js"></script>
+</body>
+</html>
