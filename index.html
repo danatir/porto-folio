@@ -5,19 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DAN ATIR — Portfolio / 2025</title>
   <meta name="description" content="Dan Atir — Visual Communication. Branding, 3D, illustration. Portfolio 2025." />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="preload" as="fetch" href="assets/models/dann_logo.glb" crossorigin />
-
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "./vendor/three/three.module.js",
-      "three/addons/": "./vendor/three/addons/",
-      "lenis": "./vendor/lenis.mjs"
-    }
-  }
-  </script>
 </head>
 <body>
 
@@ -242,29 +230,7 @@
   <!-- tr-title lives outside .transition so scroll clip-path never clips it -->
   <span class="tr-title" id="trTitle" aria-hidden="true"></span>
 
-  <!-- Debug: show JS errors visibly on screen -->
-  <script>
-    window.__dbg = function(msg) {
-      var d = document.getElementById('__err');
-      if (!d) { d = document.createElement('div'); d.id='__err'; d.style='position:fixed;bottom:0;left:0;right:0;background:red;color:#fff;font:12px monospace;padding:8px;z-index:99999;max-height:40vh;overflow:auto;white-space:pre-wrap'; document.body.appendChild(d); }
-      d.textContent += '\n' + msg;
-    };
-    window.addEventListener('error', function(e) { window.__dbg('ERROR: ' + e.message + ' @ ' + e.filename + ':' + e.lineno); });
-    window.addEventListener('unhandledrejection', function(e) { window.__dbg('PROMISE: ' + e.reason); });
-    // Fallback: collapse loader after 15s regardless
-    setTimeout(function() {
-      var l = document.getElementById("loader");
-      if (l && !l.classList.contains("snap")) {
-        window.__dbg('FALLBACK: force-collapsing loader after 15s');
-        l.classList.add("snap");
-        document.body.classList.add("entered");
-      }
-    }, 15000);
-  </script>
-  <script type="module">
-    window.__dbg('MODULE SCRIPTS WORK');
-    import('./js/main.js').catch(e => window.__dbg('main.js FAILED: ' + e));
-    import('./js/ui.js').catch(e => window.__dbg('ui.js FAILED: ' + e));
-  </script>
+  <script type="module" src="dist/main.js"></script>
+  <script type="module" src="dist/ui.js"></script>
 </body>
 </html>
