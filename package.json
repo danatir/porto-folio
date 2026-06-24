@@ -1,0 +1,23 @@
+{
+  "name": "porto-folio",
+  "version": "1.0.0",
+  "description": "A portfolio built around Dan Atir's chrome **DANN** logo (full-res GLB) and the real 2025 project assets. The **floating 3D logo** is the centrepiece; all content is presented as an **alche.studio-style smooth-scrolling site** layered over it.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danatir/porto-folio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danatir/porto-folio/issues"
+  },
+  "homepage": "https://github.com/danatir/porto-folio#readme",
+  "devDependencies": {
+    "esbuild": "^0.28.1"
+  }
+}
